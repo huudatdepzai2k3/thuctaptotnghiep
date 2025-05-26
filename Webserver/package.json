@@ -1,0 +1,22 @@
+{
+  "name": "webserver",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "jquery": "^3.7.1",
+    "kepserverex-js": "^1.0.6",
+    "lodash": "^4.17.21",
+    "mysql": "^2.18.1",
+    "nodes7": "^0.3.18",
+    "socket.io": "^4.8.1"
+  }
+}

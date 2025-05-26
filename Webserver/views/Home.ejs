@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương trình điều khiển và giám sát hiệu suất phân loại sản phẩm</title>
+    <link rel="icon" href="images/logo/logo.jpg" type="image/x-icon">
+
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/screen_control.css">
+    <link rel="stylesheet" href="css/screen_giamsat.css">
+    <link rel="stylesheet" href="css/screen_canhbao.css">
+    <link rel="stylesheet" href="css/slidebar.css">
+
+    <script src = "socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src = "js/FC1_Common.js"></script>
+    <script src="js/FC2_UserManager.js"></script>
+    <script defer src="js/FC3_Quantity.js"></script>
+
+    <script>
+        var socket = io("http://localhost:3000") // IP tĩnh (hoặc IP động, hoặc localhost)
+    </script>
+
+    <!-- ////////////// CHƯƠNG TRÌNH ĐĂNG NHẬP HỆ THỐNG //////////////  -->
+    <div id="div_login">
+        <div id="id01" class="modal">
+            <form id = "modal-content1" class="modal-content animate">
+            <div id = "img_container" class="imgcontainer">
+                <span id = "closebtt" onclick="document.getElementById('id01').style.display='none'; logout();" class="close" title="Close Modal">×</span>
+                <img decoding="async" id = "img_avatar" src="images/User/Users.jpg" alt="Avatar" class="avatar">
+            </div>
+
+            <div id = "log_container" class="container">
+                <label for="uname"><b>Username</b></label>
+                <input id = "inputuser" type="text" placeholder="Enter Username" name="uname" required>
+
+                <label for="psw"><b>Password</b></label>
+                <input id = "inputpass" type="password" placeholder="Enter Password" name="psw" required>
+
+                <button id = "bttlogin1" type="button" onclick="login();">Login</button>
+                <label>
+                <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+            </div>
+
+            <div id = "login_container" class="container" style="background-color:#f1f1f1">
+                <button id = "bttcancle" type="button" onclick="document.getElementById('id01').style.display='none'; logout();" class="cancelbtn">Cancel</button>
+                <span id = "psw" class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+            </form>
+        </div>
+    </div>
+</head>
+<!-- Phần thân của website -->
+<body>
+<!-- ////////////// Code cho slidebar////////////// -->
+    <div id = "slidebar">
+        <!--Nút đăng nhập/đăng xuất-->
+        <button id="bttLogin" class="btn" onclick="login();
+        window.location.reload();
+        ">ĐĂNG NHẬP</button>
+        <button id="bttLogout" class="btn" onclick="logout();
+        ">ĐĂNG XUẤT</button>
+        <!--Nút chọn màn hình chính-->
+        <button id="btt_Screen_Main" onclick="
+            fn_ScreenChange('Screen_Main','Screen_1','Screen_2');
+        ">MÀN HÌNH ĐIỀU KIỂN</button>
+        <!--Nút chọn màn hình 1-->
+        <button id="btt_Screen_1" onclick="
+            fn_ScreenChange('Screen_1','Screen_Main','Screen_2');
+        ">MÀN HÌNH GIÁM SÁT</button>
+        <!--Nút chọn màn hình 2-->
+        <button id="btt_Screen_2" onclick="
+            fn_ScreenChange('Screen_2','Screen_Main','Screen_1');
+        ">MÀN HÌNH CẢNH BÁO</button>
+    </div>
+<!-- //////////////Code cho màn hình chính////////////// -->
+    <div id = "Screen_Main">
+        <div class="control_panel">
+            <h2>Điều khiển và trạng thái hệ thống</h2>
+            <div class="control_panel_content">
+                <div class="state_all div_button">
+                    <img id = "Button_1" class="button" onclick= "socket.emit('Client-send-cmdM1')"><script> fn_SymbolStatus("Button_1", "Button", "state_motor") </script></br>
+                    <!-- Phần thân của website -->
+                    <h4>Trạng thái hoạt động</h4>
+                </div>
+                <div class="cd_hoatdong div_button">
+                    <img id = "Button_2" class="button" ><script> fn_SymbolStatus("Button_2", "light", "state_auto") </script></br>
+                    <h4>Trạng thái auto</h4>
+                </div>
+            </div>
+        </div>    
+
+        <img id = "Panel_electric" src="images/Symbol/Panel_electric.png">
+        <img id = "Webcam" src="images/Symbol/Webcam.png">
+        <img id = "Conveyor_1" ><script> fn_SymbolStatus("Conveyor_1", "Conveyor", "state_motor") </script>
+        <img id = "Conveyor_2" ><script> fn_SymbolStatus("Conveyor_2", "Conveyor", "state_motor") </script>
+        <img id = "Conveyor_3" ><script> fn_SymbolStatus("Conveyor_3", "Conveyor", "state_motor") </script>
+        <img id = "Motor" ><script> fn_SymbolStatus("Motor", "Motor", "state_motor") </script>
+        <img id = "Sensor_1" ><script> fn_SymbolStatus("Sensor_1", "Sensor", "state_cam_bien_1") </script>
+        <img id = "Sensor_2" ><script> fn_SymbolStatus("Sensor_2", "Sensor", "state_cam_bien_2") </script>
+        <img id = "Sensor_3" ><script> fn_SymbolStatus("Sensor_3", "Sensor", "state_cam_bien_3") </script>
+        <img id = "Sensor_4" ><script> fn_SymbolStatus("Sensor_4", "Sensor", "state_cam_bien_4") </script>
+        <img id = "Sensor_5" ><script> fn_SymbolStatus("Sensor_5", "Sensor", "state_cam_bien_5") </script>
+        <img id = "Sensor_6" ><script> fn_SymbolStatus("Sensor_6", "Sensor", "state_cam_bien_6") </script>
+        <img id = "Xilanh_1" ><script> fn_SymbolStatus("Xilanh_1", "Xilanh", "state_xi_lanh_1") </script>
+        <img id = "Xilanh_2" ><script> fn_SymbolStatus("Xilanh_2", "Xilanh", "state_xi_lanh_2") </script>
+        <img id = "Xilanh_3" ><script> fn_SymbolStatus("Xilanh_3", "Xilanh", "state_xi_lanh_3") </script>
+        <img id = "Xilanh_4" ><script> fn_SymbolStatus("Xilanh_4", "Xilanh", "state_xi_lanh_4") </script>
+        <img id = "Xilanh_5" ><script> fn_SymbolStatus("Xilanh_5", "Xilanh", "state_xi_lanh_5") </script>
+        <img id = "mang_phanloai_1" src="images/Symbol/mang_phanloai.png">
+        <img id = "mang_phanloai_2" src="images/Symbol/mang_phanloai.png">
+        <img id = "mang_phanloai_3" src="images/Symbol/mang_phanloai.png">
+        <img id = "mang_phanloai_4" src="images/Symbol/mang_phanloai.png">
+        <img id = "mang_phanloai_5" src="images/Symbol/mang_phanloai.png">
+        <img id = "slot_1" src="images/Symbol/slot.png">
+        <img id = "slot_2" src="images/Symbol/slot.png">
+        <img id = "slot_3" src="images/Symbol/slot.png">
+        <img id = "slot_4" src="images/Symbol/slot.png">
+        <img id = "slot_5" src="images/Symbol/slot.png">
+    </div>
+<!-- //////////////Code cho màn hình 1////////////// -->
+    <div id = "Screen_1">
+        <div class="dashboard">
+            <!-- Biểu đồ tỷ lệ chia chọn -->
+            <div class="card">
+            <div class="filter">
+                <label>Biểu đồ tỷ lệ chia chọn hệ thống</label>
+                <select>
+                <option>1 tuần gần nhất</option>
+                </select>
+            </div>
+            <div class="chart-container">
+                <canvas id="piechart" ></canvas>
+            </div>
+            </div>
+
+            <!-- Biểu đồ sản lượng đầu cấp -->
+            <div class="card">
+            <label>Biểu đồ sản lượng đầu cấp theo giờ</label>
+            <div class="chart-container">
+                <canvas id="columnchart"></canvas>
+            </div>
+            </div>
+
+            <!-- Lịch sử phân loại hàng -->
+            <div class="card" style="grid-column: span 2">
+            <div class="filter">
+                <label>Lịch sử phân loại hàng</label><br/>
+                <input type="radio" name="range" checked /> Theo ngày
+                <input type="radio" name="range" /> Theo tháng
+                <input type="radio" name="range" /> Theo năm
+                &nbsp; Từ <input type="date" />
+                Đến <input type="date" />
+            </div>
+            <div class="chart-container">
+                <canvas id="historychart"></canvas>
+            </div>
+            </div>
+        </div>
+    </div>
+<!-- //////////////Code cho màn hình 2////////////// -->
+    <div id = "Screen_2">
+        <!--Table Cảnh báo Alarm-->
+        <div id = "div_table_Alarm">
+            <table id="table_Alarm" >
+                <thead>
+                <tr>
+                    <th>Thời gian</th>
+                    <th>ID cảnh báo</th>
+                    <th>Trạng thái</th>
+                    <th>nội dung cảnh báo</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
