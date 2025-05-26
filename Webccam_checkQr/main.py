@@ -14,11 +14,11 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout,
 from PyQt5.QtGui import QPixmap, QImage, QFont
 
 # Định nghĩa thông số kết nối PLC và Webserver
-PLC_IP = '192.168.0.10'
+PLC_IP = '192.168.0.1'
 RACK = 0
 SLOT = 1
 DB_NUMBER = 1
-WEBSERVER_URL = 'http://example.com'
+WEBSERVER_URL = 'http://127.0.0.1:5000'
 
 # Các biến lưu trạng thái IP và URL hiện tại
 plc_ip_current = PLC_IP
